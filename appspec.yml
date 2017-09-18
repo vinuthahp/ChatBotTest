@@ -1,31 +1,21 @@
 version: 0.0
-os: linux
+os: windows 
 files:
-  - source: AspNetCoreWebApplication/build_output
-    destination: /home/ubuntu/aspnetcoreapp
+  - source: dotnetLexChatBot/build_output
+    destination: C:\Users\Administrator\aspnetlexchatbot
+  - source: dotnetLexChatBot/build_output/wwwroot/wwwroot
+    destination: C:\inetpub\
   - source: scripts/virtualhost.conf
-    destination: /home/ubuntu/aspnetcoreapp
+    destination: C:\Users\Administrator\aspnetlexchatbot
 hooks:
   ApplicationStop:
-    - location: scripts/stop_service
+    - location: \\scripts\\stop_service.bat
       timeout: 300
-      runas: root
 
   BeforeInstall:
-    - location: scripts/remove_application
+    - location: \\scripts\\before-install.bat
       timeout: 300
-      runas: root
-
-  AfterInstall:
-    - location: scripts/install_dotnetcore
-      timeout: 500
-      runas: root
-
-    - location: scripts/install_httpd
-      timeout: 300
-      runas: root
 
   ApplicationStart:
-    - location: scripts/start_service
+    - location: \\scripts\\start_service.bat
       timeout: 300
-      runas: root
