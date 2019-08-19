@@ -2,7 +2,6 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - sudo apt-get install dotnet-sdk-2.2
       - echo Restore started on `date`
       - dotnet restore dotnetLexChatBot/dotnetLexChatBot.csproj
   build:
