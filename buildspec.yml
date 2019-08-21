@@ -1,4 +1,4 @@
-version: 0.1
+version: 2.2
  runtime-versions:
       java: openjdk8
       dotnet: 2.2
