@@ -1,15 +1,15 @@
-versions:
-      2.2:
-        commands:
-          - echo "Installing .NET version 2.2 ..."
+version: 0.2
 phases:
   pre_build:
     commands:
-      - dotnet restore
+      - echo Restore started on `date`
+      - dotnet restore dotnetLexChatBot/dotnetLexChatBot.csproj
   build:
     commands:
-      - dotnet build
+      - echo Build started on `date`
+      - dotnet publish -c release -o ./build_output dotnetLexChatBot/dotnetLexChatBot.csproj
 artifacts:
   files:
-    - bin/Debug/netcoreapp1.1/*
-  discard-paths: yes
+    - dotnetLexChatBot/build_output/**/*
+    - scripts/**/*
+    - appspec.yml
