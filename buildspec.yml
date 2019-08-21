@@ -1,18 +1,33 @@
 version: 0.2
-
-# Assumes the image is microsoft/dotnet-framework:4.7.2-sdk or similar
 phases:
-runtime-versions: java: openjdk8 
+  env:
+  variables:
+    basePath: 'hold'
   install:
     commands:
-      # Below is the URL for the MSI linked from https://www.iis.net/downloads/microsoft/web-deploy
-      - Invoke-WebRequest -OutFile WebDeploy_amd64_en-US.msi https://download.microsoft.com/download/0/1/D/01DC28EA-638C-4A22-A57B-4CEF97755C6C/WebDeploy_amd64_en-US.msi
-      - msiexec /i WebDeploy_amd64_en-US.msi /quiet
-      # MSIExec will return before it is actually done - 30s seems to work...
-      - Start-Sleep 30
+      - echo set basePath for project
+      - basePath=$(pwd)
+      - echo $basePath
+      - echo Build restore and package Lambda function using AWS .NET Tools...
+      - dotnet restore functions/*/NASAPicOfTheDay.csproj
+      - cd functions/NASAPicOfTheDay
+      - dotnet lambda package -c Release -f netcoreapp1.0 -o ../lambda_build/nasa-lambda-function.zip
   pre_build:
     commands:
-      - nuget restore
+      - echo Deploy Lambda function used in ASPNET application using AWS .NET Tools. Must be in path of Lambda function build 
+      - cd $basePath
+      - cd functions/NASAPicOfTheDay
+      - dotnet lambda deploy-function NASAPicAPI -c Release -pac ../lambda_build/nasa-lambda-function.zip --profile-location funcprof -fd 'NASA API for Picture of the Day' -fn NASAPicAPI -fh NASAPicOfTheDay::NASAPicOfTheDay.SpacePic::GetNASAPicInfo -frun dotnetcore1.0 -frole arn:aws:iam::xxxxxxxxxxxx:role/lambda_exec_role -framework netcoreapp1.0 -fms 256 -ft 30  
+      - echo Lambda function is now deployed - Now change directory back to Base path
+      - cd $basePath
+      - echo Restore started on `date`
+      - dotnet restore AspNetCoreWebApplication/AspNetCoreWebApplication.csproj
   build:
     commands:
-      - msbuild /P:Configuration=Release /T:Build,Package
+      - echo Build started on `date`
+      - dotnet publish -c release -o ./build_output AspNetCoreWebApplication/AspNetCoreWebApplication.csproj
+artifacts:
+  files:
+    - AspNetCoreWebApplication/build_output/**/*
+    - scripts/**/*
+    - appspec.yml
