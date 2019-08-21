@@ -1,7 +1,7 @@
-version: 2.2
- runtime-versions:
-      java: openjdk8
-      dotnet: 2.2
+versions:
+      2.2:
+        commands:
+          - echo "Installing .NET version 2.2 ..."
 phases:
   pre_build:
     commands:
