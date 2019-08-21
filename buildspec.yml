@@ -1,5 +1,7 @@
 version: 0.1
- 
+ runtime-versions:
+      java: openjdk8
+      dotnet: 2.2
 phases:
   pre_build:
     commands:
