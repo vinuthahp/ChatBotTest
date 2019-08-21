@@ -1,8 +1,10 @@
 version: 0.2
-phases:
-  install:
-    runtime-versions:
-      java: openjdk8
+env:
+  variables:
+    SOLUTION: .\CSharpHelloWorld.sln
+    PACKAGE_DIRECTORY: .\packages
+    DOTNET_FRAMEWORK: 4.6.2
+
   pre_build:
     commands:
       - echo Restore started on `date`
