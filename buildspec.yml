@@ -2,6 +2,7 @@ version: 0.2
 
 # Assumes the image is microsoft/dotnet-framework:4.7.2-sdk or similar
 phases:
+runtime-versions: java: openjdk8 
   install:
     commands:
       # Below is the URL for the MSI linked from https://www.iis.net/downloads/microsoft/web-deploy
