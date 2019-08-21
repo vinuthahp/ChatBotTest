@@ -1,32 +1,13 @@
-version: 0.2
+version: 0.1
+ 
 phases:
-  variables:
-    basePath: 'hold'
-  install:
-    commands:
-      - echo set basePath for project
-      - basePath=$(pwd)
-      - echo $basePath
-      - echo Build restore and package Lambda function using AWS .NET Tools...
-      - dotnet restore functions/*/NASAPicOfTheDay.csproj
-      - cd functions/NASAPicOfTheDay
-      - dotnet lambda package -c Release -f netcoreapp1.0 -o ../lambda_build/nasa-lambda-function.zip
   pre_build:
     commands:
-      - echo Deploy Lambda function used in ASPNET application using AWS .NET Tools. Must be in path of Lambda function build 
-      - cd $basePath
-      - cd functions/NASAPicOfTheDay
-      - dotnet lambda deploy-function NASAPicAPI -c Release -pac ../lambda_build/nasa-lambda-function.zip --profile-location funcprof -fd 'NASA API for Picture of the Day' -fn NASAPicAPI -fh NASAPicOfTheDay::NASAPicOfTheDay.SpacePic::GetNASAPicInfo -frun dotnetcore1.0 -frole arn:aws:iam::xxxxxxxxxxxx:role/lambda_exec_role -framework netcoreapp1.0 -fms 256 -ft 30  
-      - echo Lambda function is now deployed - Now change directory back to Base path
-      - cd $basePath
-      - echo Restore started on `date`
-      - dotnet restore AspNetCoreWebApplication/AspNetCoreWebApplication.csproj
+      - dotnet restore
   build:
     commands:
-      - echo Build started on `date`
-      - dotnet publish -c release -o ./build_output AspNetCoreWebApplication/AspNetCoreWebApplication.csproj
+      - dotnet build
 artifacts:
   files:
-    - AspNetCoreWebApplication/build_output/**/*
-    - scripts/**/*
-    - appspec.yml
+    - bin/Debug/netcoreapp1.1/*
+  discard-paths: yes
